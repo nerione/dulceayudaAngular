@@ -1,0 +1,85 @@
+<ul class="alert alert-danger" *ngIf="errores?.length > 0 ">
+  <li *ngFor="let err of errores">
+    {{ err }}
+  </li>
+</ul>
+
+<div class="card bg-dark text-white">
+  <div class="card-header">{{ titulo }}</div>
+  <div class="card-body">
+
+    <form #contactoForm="ngForm">
+      <div class="form-group row">
+        <label for="id" class="col-form-label col-sm-2">Id</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)] = "cliente.id" name = "id">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="nombre" class="col-form-label col-sm-2">Nombre</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)] = "cliente.firstName" name = "nombre" minlength ="4" #nombre="ngModel"> <!-- required -->
+          <div class="alert alert-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+            <div *ngIf="nombre.errors.required">Nombre es requerido</div>
+            <div *ngIf="nombre.errors.minlength">Nombre debe tener 4 caracteres mínimo</div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <div class="form-group row">
+        <label for="apellido" class="col-form-label col-sm-2">Apellido</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)] ="cliente.lastName" name = "apellido" minlength="4" #apellido="ngModel">  <!-- required -->
+          <div class="alert alert-danger" *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)">
+            <div *ngIf="apellido.errors.required">Apellido es requerido</div>
+            <div *ngIf="apellido.errors.minlength">Apellido debe tener 4 caracteres mínimo</div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <label for="telefono" class="col-form-label col-sm-2">Telefono</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)]="cliente.telephone" name="telefono" maxlength="10" #telefono="ngModel">
+          <div class="alert alert-danger" *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)">
+            <div *ngIf="telefono.errors.maxlength">Telefono debe contener 10 digitos maximo</div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <label for="ciudad" class="col-form-label col-sm-2">Ciudad</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" [(ngModel)] = "cliente.city" name = "ciudad" maxlength="3" #ciudad="ngModel">
+          <div class="alert alert-danger" *ngIf="ciudad.invalid && (ciudad.dirty || ciudad.touched)">
+            <div *ngIf="ciudad.errors.required">Ciudad es requerido</div>
+            <div *ngIf="ciudad.errors.maxlength">Ciudad debe tener 3 caracteres máximo</div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <button class="btn btn-primary btn-rounded" role="button" (click)='create()' *ngIf="!cliente.id else elseBlock" [disabled] = "!contactoForm.form.valid">Crear</button>
+
+          <ng-template #elseBlock>
+            <button class="btn btn-primary btn-rounded" role="button" (click)='actualizarContacto()' [disabled] = "!contactoForm.form.valid">Actualizar</button>
+
+          </ng-template>
+
+        </div>
+      </div>
+
+
+
+
+    </form>
+  </div>
+</div>
