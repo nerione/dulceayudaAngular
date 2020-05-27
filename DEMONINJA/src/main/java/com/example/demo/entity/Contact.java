@@ -1,9 +1,10 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,6 +20,7 @@ public class Contact implements Serializable{
 	private String lastName;
 	private String telephone;
 	private String city;
+	private Date fechaRegistro;
 	
 	//Esta anotacion exluye este campo al momento de persistir en base de datos.
 	@Transient
@@ -112,14 +114,21 @@ public class Contact implements Serializable{
 	}
 
 
+	public Date getFechaRegistro() {
+		return fechaRegistro;
+	}
+
+
+	public void setFechaRegistro(Date fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
+	}
+
 
 	@Override
 	public String toString() {
-		return "Contact [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", telephone=" + telephone + ", city=" + city + ", datoInutil=" + datoInutil + "]";
-	}
-	
-	
+		return "Contact [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", telephone=" + telephone
+				+ ", city=" + city + ", fechaRegistro=" + fechaRegistro + ", datoInutil=" + datoInutil + "]";
+	}	
 	
 	
 }

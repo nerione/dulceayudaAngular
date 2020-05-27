@@ -1,6 +1,11 @@
 package com.example.demo.model;
 
+import java.time.LocalDate;
+import java.util.Date;
+
+import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ContactModel {
@@ -23,11 +28,14 @@ public class ContactModel {
 	@Size(min = 3, message = "Campo ciudad debe ser de 3 caracteres")
 	private String city;
 	
+	@NotNull(message =  "Campo Fecha es obligatorio")
+	private Date fechaRegistro;
+	
 	private String datoInutil;
 	
 	public ContactModel() {}
 	
-	public ContactModel(String id, String firstName, String lastName, String telephone, String city, String datoInutil) {
+	public ContactModel(String id, String firstName, String lastName, String telephone, String city, String datoInutil, Date fechaRegistro) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -35,6 +43,7 @@ public class ContactModel {
 		this.telephone = telephone;
 		this.city = city;
 		this.datoInutil = datoInutil;
+		this.fechaRegistro = fechaRegistro;
 	}
 
 		public String getId() {
@@ -94,11 +103,25 @@ public class ContactModel {
 		this.datoInutil = datoInutil;
 	}
 
+	public Date getFechaRegistro() {
+		return fechaRegistro;
+	}
+
+	public void setFechaRegistro(Date fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
+	}
 
 	@Override
 	public String toString() {
 		return "ContactModel [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", telephone="
-				+ telephone + ", city=" + city + ", datoInutil=" + datoInutil + "]";
+				+ telephone + ", city=" + city + ", fechaRegistro=" + fechaRegistro + ", datoInutil=" + datoInutil
+				+ "]";
+	}
+	
+	
+	@PostConstruct
+	private void init() {
+		System.out.println("EL BEAN CONTACTMODEL YA FUE CARGADO AL CONTENEDOR...*************************************************************************");
 	}
 	
 	

@@ -88,8 +88,9 @@ public class ContactServiceImpl implements ContactRepository, PagingAndSortingRe
 	public Page<Contact> findAll(Pageable pageable) {
 		Query query = new Query();
 		query.with(pageable);
+		log.info("TOTAL REGISTROS: " + mongoTemplate.count(query, Contact.class));
 		List<Contact> result = mongoTemplate.find(query, Contact.class);
-		return PageableExecutionUtils.getPage(result, pageable, () -> mongoTemplate.count(query, Contact.class)); 
+		return PageableExecutionUtils.getPage(result, pageable, () -> mongoTemplate.count(new Query(), Contact.class));
 	}
 
 	@Override

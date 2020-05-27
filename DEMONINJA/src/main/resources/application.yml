@@ -1,0 +1,2 @@
+spring:
+  jackson:    time-zone: America/Mexico_City    locale: es_MX

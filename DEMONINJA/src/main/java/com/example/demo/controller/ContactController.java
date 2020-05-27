@@ -157,14 +157,14 @@ public class ContactController {
 			HttpHeaders httpHeaders = new HttpHeaders();
 			ResponseEntity<?> response = null;
 			Map<String, String> horror = new HashMap();
-					
+								
 			try {
 				
-				log.info("EJECUTANDO OPERACION DE CONSULTA POR PAGINAS... ");
-				
+				log.info("EJECUTANDO OPERACION DE CONSULTA POR PAGINAS... Para pagina : " + pagina);
 					Page<Contact> paginados = contactService.findAll(PageRequest.of(pagina, TAM_PAGINA));
 					List<ContactModel> contactosModel = new ArrayList<ContactModel>();
 					contactosModel = paginados.getContent().parallelStream().map( contactoItem -> contactConverter.contac2ContactModel(contactoItem)).collect(Collectors.toList());
+					paginados.getTotalPages();
 					response = response.ok().headers(httpHeaders).body(paginados);	
 
 			}catch (Exception e) {
