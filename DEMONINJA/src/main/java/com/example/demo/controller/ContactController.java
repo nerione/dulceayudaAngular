@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,8 @@ public class ContactController {
 	
 	@Autowired
 	private ContactConverter contactConverter;
+	
+	private static final Integer TAM_PAGINA = 3;
 	
 	//API PARA OPERACIONES BASICAS SOBRE UN CONTACTO
 	
@@ -113,46 +116,64 @@ public class ContactController {
 		
 		
 	//R
-	@GetMapping(path = {"/contacts/{id}", "/contacts"}, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> showContacts(@PathVariable(name = "id", required = false) String id) {		
-		
-		HttpHeaders httpHeaders = new HttpHeaders();
-		ResponseEntity<?> response = null;
-		Map<String, String> horror = new HashMap();
-		
-		
-		//Page<Contact> contacts = contactService.findAll(new PageRequest)
-		//Paginacion con spring data
-		//contactService.findAll(pageable)
-		
-		Page<Contact> paginados = contactService.findAll(PageRequest.of(3, 3));
-		
-		
-		try {
-			log.info("EJECUTANDO OPERACION DE CONSULTA");
-			if(id != null) {
-				Contact c = new Contact();
-				ContactModel cm = new ContactModel();
-				c = contactService.getContactById(id);
-				if(c != null) {
-					cm = contactConverter.contac2ContactModel(c);
-				}	
-				response = response.status(c != null ? HttpStatus.OK : HttpStatus.NOT_FOUND).headers(httpHeaders).body(cm);
+		@GetMapping(path = {"/contacts/{id}", "/contacts"}, produces = MediaType.APPLICATION_JSON_VALUE)
+		public ResponseEntity<?> showContacts(@PathVariable(name = "id", required = false) String id) {
+			
+			HttpHeaders httpHeaders = new HttpHeaders();
+			ResponseEntity<?> response = null;
+			Map<String, String> horror = new HashMap();
+					
+			try {
 				
-			}else {
-				//Recuperamos la lista completa de contactos
-				List<Contact> listaContactos = contactService.getAllContacts();
-				List<ContactModel> contacModelLista = listaContactos.parallelStream().map(c-> contactConverter.contac2ContactModel(c)).collect(Collectors.toList());
-				response = response.ok().headers(httpHeaders).body(paginados);
-			}		
+				log.info("EJECUTANDO OPERACION DE CONSULTA");
+				if(id != null) {
+					Contact c = new Contact();
+					ContactModel cm = new ContactModel();
+					c = contactService.getContactById(id);
+					if(c != null) {
+						cm = contactConverter.contac2ContactModel(c);
+					}	
+					response = response.status(c != null ? HttpStatus.OK : HttpStatus.NOT_FOUND).headers(httpHeaders).body(cm);
+					
+				}else{
+					//Recuperamos la lista completa de contactos
+					List<Contact> listaContactos = contactService.getAllContacts();
+					List<ContactModel> contacModelLista = listaContactos.parallelStream().map(c-> contactConverter.contac2ContactModel(c)).collect(Collectors.toList());
+					response = response.ok().headers(httpHeaders).body(contacModelLista);
+				}	
 
-		}catch (Exception e) {
-			log.error("PROBLEMAS AL RECUPERAR LA LISTA DE CONTACTOS");	
+			}catch (Exception e) {
+				log.error("PROBLEMAS AL RECUPERAR LA LISTA DE CONTACTOS");	
+			}
+			
+			return response;
+			//User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		}
 		
-		return response;
-		//User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
+		
+		@GetMapping(path = {"/contacts/pagina/{pagina}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+		public ResponseEntity<?> showContactsPaginated(@PathVariable(name="pagina", required = true) int pagina) {		
+			
+			HttpHeaders httpHeaders = new HttpHeaders();
+			ResponseEntity<?> response = null;
+			Map<String, String> horror = new HashMap();
+					
+			try {
+				
+				log.info("EJECUTANDO OPERACION DE CONSULTA POR PAGINAS... ");
+				
+					Page<Contact> paginados = contactService.findAll(PageRequest.of(pagina, TAM_PAGINA));
+					List<ContactModel> contactosModel = new ArrayList<ContactModel>();
+					contactosModel = paginados.getContent().parallelStream().map( contactoItem -> contactConverter.contac2ContactModel(contactoItem)).collect(Collectors.toList());
+					response = response.ok().headers(httpHeaders).body(paginados);	
+
+			}catch (Exception e) {
+				log.error("PROBLEMAS AL RECUPERAR LA LISTA DE CONTACTOS PGINADOS");	
+			}
+			
+			return response;
+			//User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		}
 	
 	
 	//Update de entidades Contacto en BD
