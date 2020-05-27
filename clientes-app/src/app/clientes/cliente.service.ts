@@ -18,27 +18,26 @@ export class ClienteService {
 
   constructor(private http : HttpClient, private router : Router) { }
   //Obtenemos la lista de todos los Contactos en BD
-  getClientes() : Observable<Cliente []> {
+  getClientes(pageId : number) : Observable<any> {
     //return of (CLIENTES);
-    return this.http.get(this.urlEndPoint).pipe(
-      tap(response => {
+    return this.http.get(this.urlEndPoint+'/pagina/'+pageId).pipe(
+      tap(( response : any) => {
         console.log("ClienteService : tap 1");
-        let clientes = response as Cliente[];
-        clientes.forEach( cliente =>{
+        (response.content as Cliente[]).forEach( cliente =>{
           console.log(cliente.firstName);
         })
       }),
-      map( (response) => {
-        let clientes = response as Cliente[];
-        return clientes.map( cliente =>{
+      map( (response:any) => {
+        (response.content as Cliente[]).map( cliente =>{
           cliente.firstName = cliente.firstName.toUpperCase();
           return cliente;
         });
+        return response;
       }),
 
       tap(response => {
-        console.log("ClienteService : tap 2")
-        response.forEach( cliente =>{
+        console.log("ClienteService : tap 2");
+        (response.content as Cliente[]).forEach( cliente =>{
           console.log(cliente.firstName);
         })
       }),

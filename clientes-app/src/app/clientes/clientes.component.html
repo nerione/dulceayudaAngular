@@ -43,7 +43,8 @@
         </tr>
       </tbody>
     </table>
-
+    <!--! [paginador] es un atributo del objeto hijo PaginatorComponent --->
+    <paginator-nav *ngIf="paginadorPadre" [paginador] = "paginadorPadre"></paginator-nav>
 
   </div>
 </div>
