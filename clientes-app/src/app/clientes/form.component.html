@@ -67,13 +67,7 @@
       <div class="form-group row">
         <label for="fechaRegistro" class="col-form-label col-sm-2">Fecha de Registro</label>
         <div class="col-sm-6">
-
-
-          <input [matDatepicker]="miFechaRegistro" class="form-control" [(ngModel)] ="cliente.fechaRegistro" name = "fechaRegistro">
-            <mat-datepicker-toggle [for]="miFechaRegistro"></mat-datepicker-toggle>
-            <mat-datepicker #miFechaRegistro></mat-datepicker>
-
-
+          <input type="date" class="form-control" [(ngModel)] ="cliente.fechaRegistro" name = "fechaRegistro">
         </div>
       </div>
 

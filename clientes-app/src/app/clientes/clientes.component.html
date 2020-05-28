@@ -19,6 +19,7 @@
           <th>Apellido</th>
           <th>Telefono</th>
           <th>Ciudad</th>
+          <th>Fecha</th>
           <th>
             Editar
           </th>
@@ -34,6 +35,7 @@
           <td>{{cliente.lastName}}</td>
           <td>{{cliente.telephone}}</td>
           <td>{{cliente.city}}</td>
+          <td>{{cliente.fechaRegistro}}</td>
           <td>
             <button type="button" class ="btn btn-primary" [routerLink] = "['/clientes/form', cliente.id]">Editar</button>
           </td>
