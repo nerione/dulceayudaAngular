@@ -4,4 +4,5 @@ export class Cliente {
   lastName : string;
   telephone : string;
   city : string;
+  fechaRegistro: Date;
 }
