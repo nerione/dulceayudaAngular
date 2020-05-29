@@ -1,15 +1,22 @@
 package com.example.demo.controller;
 
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.tomcat.jni.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,7 +30,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -178,14 +187,14 @@ public class ContactController {
 	
 	//Update de entidades Contacto en BD
 	@PutMapping(path = {"/contacts/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updateContact(@Valid BindingResult result, @PathVariable(name = "id", required = true) String id, @RequestBody ContactModel contactModelRequest){
+	public ResponseEntity<?> updateContact(@PathVariable(name = "id", required = true) String id, @RequestBody ContactModel contactModelRequest, @Valid BindingResult result){
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		
 		List<String> errores = result.getFieldErrors().parallelStream().map(error -> error.getField() + " " + error.getDefaultMessage()).collect(Collectors.toList());
 		
-		if(errores != null)
+		if(errores != null && errores.size() > 0)
 			return new ResponseEntity<List<String>>(errores, httpHeaders, HttpStatus.BAD_REQUEST);
 		try {
 			log.info("EJECUTANDO OPERACION DE ACTUALIZACION");
@@ -209,11 +218,14 @@ public class ContactController {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> horror = new HashMap();
+		Contact _contacto = contactService.getContactById(id);
 		try {
 			log.info("EJECUTANDO OPERACION DE BORRADO");
 			long itemsEliminados = contactService.deleteContact(id);
 			if(itemsEliminados > 0) {
-				log.info( itemsEliminados + "Contactos eliminados de manera correcta");
+				log.info( itemsEliminados + "Contactos eliminados de manera correcta ");
+				log.info("Procedemos al borrado de su imagen de perfil. SE ELIMINÓ ? " + Files.deleteIfExists(Paths.get("fotos").resolve(_contacto.getFile()).toAbsolutePath()));
+				log.info("****************************************************************************************************");
 				return new ResponseEntity<Contact>(null, httpHeaders, HttpStatus.OK);
 				}
 			else {
@@ -227,6 +239,66 @@ public class ContactController {
 			return new ResponseEntity<Contact>(null, httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+	}
+	
+	@PostMapping(path = "/contact/upload")
+	public ResponseEntity<?> upload(@RequestParam(name = "foto", required = true) MultipartFile file, @RequestParam String id){
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		Map<String, Object> response = new HashMap<String, Object>();
+		
+		try {
+			
+			Contact _contact = contactService.getContactById(id);
+						
+			if(!file.isEmpty()) {
+				
+				String fotoVigente = _contact.getFile();
+				
+				if(fotoVigente != null)
+					log.info("SE ELIMINO IMAGEN ANTERIOR ?" + Files.deleteIfExists((Paths.get("fotos").resolve(_contact.getFile()).toAbsolutePath()))); ;
+				
+				String nombre_archivo = UUID.randomUUID()+file.getOriginalFilename();
+				Path ruta = Paths.get("fotos").resolve(nombre_archivo).toAbsolutePath();
+				Files.copy(file.getInputStream(), ruta);
+				//guardamos el nombre de la foto por ahora
+				_contact.setFile(nombre_archivo);
+				//actualizamos el contacto
+				contactService.updateContact(_contact);
+				response.put("contact", _contact);
+				response.put("mensaje", "Se ha subido foto"+ nombre_archivo +"correctamente");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+			}
+			
+			
+			
+		}catch(Exception e) {
+			log.error("Problemas al intentar subir archivo...");
+			response.put("Error al intentar subir archivo" , e.getCause().getMessage());
+		}
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	//				   /contact/file/{fileName:.+}   Expresion regular que indica que el parametro va a contener un punto y una extension		
+	@GetMapping(path = "/contact/file/{fileName:.+}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<?> getFile(@PathVariable(name = "fileName", required = true) String fileName){
+		//La respuesta de este servicio sera la imagen
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.IMAGE_PNG);
+		
+		try {
+			
+			Path ruta = Paths.get("fotos").resolve(fileName).toAbsolutePath();
+			
+			byte[] imagen = new FileOutputStream(ruta);
+			Files.copy
+			
+			
+		}catch(Exception e){
+			log.error("Problemas al recuperar la imagen " + e.getCause().getMessage());
+		}
+		
+		return null;
 	}
 	
 

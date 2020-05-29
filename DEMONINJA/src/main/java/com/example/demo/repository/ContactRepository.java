@@ -33,5 +33,7 @@ public interface ContactRepository{
 	
 	//Eliminamos logicamente un contacto de la BD por ID.
 	long deleteContact(String id);
+	
+	Contact updateContactById(String id, String file);
 
 }

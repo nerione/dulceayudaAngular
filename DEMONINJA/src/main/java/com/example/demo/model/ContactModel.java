@@ -1,12 +1,12 @@
 package com.example.demo.model;
 
-import java.time.LocalDate;
 import java.util.Date;
-
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.springframework.data.annotation.Transient;
 
 public class ContactModel {
 	
@@ -29,13 +29,18 @@ public class ContactModel {
 	private String city;
 	
 	@NotNull(message =  "Campo Fecha es obligatorio")
-	private Date fechaRegistro;
+	private String fechaRegistro;
+	
+	private String file;
+	
+	@Transient
+	private String fechaRegistroFront;
 	
 	private String datoInutil;
 	
 	public ContactModel() {}
 	
-	public ContactModel(String id, String firstName, String lastName, String telephone, String city, String datoInutil, Date fechaRegistro) {
+	public ContactModel(String id, String firstName, String lastName, String telephone, String city, String datoInutil, String fechaRegistro, String fechRegistroFront, String file) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -44,6 +49,8 @@ public class ContactModel {
 		this.city = city;
 		this.datoInutil = datoInutil;
 		this.fechaRegistro = fechaRegistro;
+		this.fechaRegistroFront = fechRegistroFront;
+		this.file = file;
 	}
 
 		public String getId() {
@@ -103,22 +110,29 @@ public class ContactModel {
 		this.datoInutil = datoInutil;
 	}
 
-	public Date getFechaRegistro() {
+	public String getFechaRegistro() {
 		return fechaRegistro;
 	}
 
-	public void setFechaRegistro(Date fechaRegistro) {
+	public void setFechaRegistro(String fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
+	}
+
+	public String getFile() {
+		return file;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
 	}
 
 	@Override
 	public String toString() {
 		return "ContactModel [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", telephone="
-				+ telephone + ", city=" + city + ", fechaRegistro=" + fechaRegistro + ", datoInutil=" + datoInutil
-				+ "]";
+				+ telephone + ", city=" + city + ", fechaRegistro=" + fechaRegistro + ", file=" + file
+				+ ", fechaRegistroFront=" + fechaRegistroFront + ", datoInutil=" + datoInutil + "]";
 	}
-	
-	
+
 	@PostConstruct
 	private void init() {
 		System.out.println("EL BEAN CONTACTMODEL YA FUE CARGADO AL CONTENEDOR...*************************************************************************");

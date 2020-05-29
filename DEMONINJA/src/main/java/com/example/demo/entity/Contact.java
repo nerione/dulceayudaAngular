@@ -1,7 +1,6 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -20,7 +19,10 @@ public class Contact implements Serializable{
 	private String lastName;
 	private String telephone;
 	private String city;
-	private Date fechaRegistro;
+	private String fechaRegistro;
+	private String file;
+	@Transient
+	private String fechaRegistroFront;
 	
 	//Esta anotacion exluye este campo al momento de persistir en base de datos.
 	@Transient
@@ -29,7 +31,7 @@ public class Contact implements Serializable{
 	public Contact() {}
 
 
-	public Contact(String idContact, @NotNull String firstName, String lastName, String telephone, String city, String datoInutil) {
+	public Contact(String idContact, @NotNull String firstName, String lastName, String telephone, String city, String datoInutil, String fechRegistroFront, String file) {
 		super();
 		this.id = idContact;
 		this.firstName = firstName;
@@ -37,6 +39,8 @@ public class Contact implements Serializable{
 		this.telephone = telephone;
 		this.city = city;
 		this.datoInutil = datoInutil;
+		this.fechaRegistroFront = fechRegistroFront;
+		this.file = file;
 	}
 
 	public String getId() {
@@ -114,21 +118,47 @@ public class Contact implements Serializable{
 	}
 
 
-	public Date getFechaRegistro() {
+	public String getFechaRegistro() {
 		return fechaRegistro;
 	}
 
 
-	public void setFechaRegistro(Date fechaRegistro) {
+	public void setFechaRegistro(String fechaRegistro) {
 		this.fechaRegistro = fechaRegistro;
+	}
+	
+
+	public String getFechaRegistroFront() {
+		return fechaRegistroFront;
+	}
+
+
+	public void setFechaRegistroFront(String fechaRegistroFront) {
+		this.fechaRegistroFront = fechaRegistroFront;
+	}
+	
+	
+
+
+	public String getFile() {
+		return file;
+	}
+
+
+	public void setFile(String file) {
+		this.file = file;
 	}
 
 
 	@Override
 	public String toString() {
 		return "Contact [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", telephone=" + telephone
-				+ ", city=" + city + ", fechaRegistro=" + fechaRegistro + ", datoInutil=" + datoInutil + "]";
-	}	
+				+ ", city=" + city + ", fechaRegistro=" + fechaRegistro + ", file=" + file + ", fechaRegistroFront="
+				+ fechaRegistroFront + ", datoInutil=" + datoInutil + "]";
+	}
+
+
+	
 	
 	
 }

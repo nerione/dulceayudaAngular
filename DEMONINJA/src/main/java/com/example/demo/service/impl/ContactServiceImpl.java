@@ -92,6 +92,21 @@ public class ContactServiceImpl implements ContactRepository, PagingAndSortingRe
 		List<Contact> result = mongoTemplate.find(query, Contact.class);
 		return PageableExecutionUtils.getPage(result, pageable, () -> mongoTemplate.count(new Query(), Contact.class));
 	}
+	
+	
+	@Override
+	public Contact updateContactById(String id, String file) {
+		Query query = new Query();
+		query.addCriteria(new Criteria().where("_id").is(id));
+		Contact c = mongoTemplate.findOne(query, Contact.class);
+		if(c != null) {
+			c.setFile(file);
+			mongoTemplate.save(c);
+			log.info("El contacto fue actualizado correctamente " + c.toString());
+		}
+		
+		return null;
+	}
 
 	@Override
 	public <S extends Contact> S save(S entity) {

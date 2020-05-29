@@ -1,13 +1,9 @@
 package com.example.demo.converter;
 
-import java.sql.Date;
-
 import org.springframework.stereotype.Component;
 
 import com.example.demo.entity.Contact;
 import com.example.demo.model.ContactModel;
-
-import ch.qos.logback.classic.pattern.DateConverter;
 
 @Component
 public class ContactConverter {
@@ -22,6 +18,7 @@ public class ContactConverter {
 		c.setTelephone(contactModel.getTelephone());
 		c.setId(contactModel.getId());
 		c.setFechaRegistro(contactModel.getFechaRegistro());
+		//c.setFechaRegistro(convertDate(contactModel.getFechaRegistro()));
 		return c;
 	}
 	
@@ -37,7 +34,7 @@ public class ContactConverter {
 		cm.setLastName(contact.getLastName());
 		cm.setTelephone(contact.getTelephone());
 		cm.setFechaRegistro(contact.getFechaRegistro());
-		
+		//cm.setFechaRegistro(convertDate(contact.getFechaRegistro()));
 		return cm;
 	}
 
