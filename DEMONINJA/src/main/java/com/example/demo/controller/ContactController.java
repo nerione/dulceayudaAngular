@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
 import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +20,7 @@ import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.jni.File;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -241,7 +245,7 @@ public class ContactController {
 
 	}
 	
-	@PostMapping(path = "/contact/upload")
+	@PostMapping(path = "/contacts/upload")
 	public ResponseEntity<?> upload(@RequestParam(name = "foto", required = true) MultipartFile file, @RequestParam String id){
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -279,26 +283,36 @@ public class ContactController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	
+	
 	//				   /contact/file/{fileName:.+}   Expresion regular que indica que el parametro va a contener un punto y una extension		
-	@GetMapping(path = "/contact/file/{fileName:.+}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@GetMapping(path = "/contacts/file/{fileName:.+}")
 	public ResponseEntity<?> getFile(@PathVariable(name = "fileName", required = true) String fileName){
 		//La respuesta de este servicio sera la imagen
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.IMAGE_PNG);
+		headers.add("Content-Type", "image/png");
+		ResponseEntity<String> response = null;
+		Map<String, String> imagen = new HashMap<String, String>();
 		
 		try {
-			
+
 			Path ruta = Paths.get("fotos").resolve(fileName).toAbsolutePath();
 			
-			byte[] imagen = new FileOutputStream(ruta);
-			Files.copy
+			String image = Base64.getEncoder().withoutPadding().encodeToString(Files.readAllBytes(ruta));
+			imagen.put("content", image);
+			headers.setContentLength(image.length());
+			headers.add("neri", "dummie");
 			
+			log.info("Respuesta imagen : ");
+			log.info(image.toString());
+			log.info("---------------------------------------------------------------------------------------");
+			response = ResponseEntity.status(HttpStatus.OK).headers(headers).body(image);
 			
 		}catch(Exception e){
 			log.error("Problemas al recuperar la imagen " + e.getCause().getMessage());
 		}
 		
-		return null;
+		return response;
 	}
 	
 
