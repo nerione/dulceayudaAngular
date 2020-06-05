@@ -22,9 +22,9 @@ public class User implements Serializable{
 	public User() {}
 	
 	
-	public User(String id, String username, String password, boolean enabled, Set<UserRole> userRole) {
+	public User(String username, String password, boolean enabled, Set<UserRole> userRole) {
 		super();
-		this.id = id;
+		
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;

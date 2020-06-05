@@ -1,30 +1,20 @@
 package com.example.demo.controller;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.tomcat.jni.File;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,9 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +32,7 @@ import com.example.demo.converter.ContactConverter;
 import com.example.demo.entity.Contact;
 import com.example.demo.model.ContactModel;
 import com.example.demo.repository.ContactRepository;
+import com.example.demo.service.UploadImagenService;
 
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -55,6 +44,9 @@ public class ContactController {
 	
 	@Autowired
 	private ContactRepository contactService;
+	
+	@Autowired
+	private UploadImagenService uploadImagenService;
 	
 	@Autowired
 	private ContactConverter contactConverter;
@@ -95,7 +87,8 @@ public class ContactController {
 	 * }
 	 */
 	
-	//Create
+		//Recurso protegido por springSecurity mediante anotacion @Secured
+		//@Secured("ROLE_ADMIN")
 		@PostMapping(path = {"/contacts"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 		public ResponseEntity<?> saveContacts(@Valid @RequestBody ContactModel contactModelRequest, BindingResult result){
 			
@@ -128,7 +121,9 @@ public class ContactController {
 		}
 		
 		
-	//R
+		//R
+		//Recurso protegido por springSecurity mediante anotacion @Secured
+		//@Secured({"ROLE_ADMIN","ROLE_USER"})
 		@GetMapping(path = {"/contacts/{id}", "/contacts"}, produces = MediaType.APPLICATION_JSON_VALUE)
 		public ResponseEntity<?> showContacts(@PathVariable(name = "id", required = false) String id) {
 			
@@ -163,7 +158,7 @@ public class ContactController {
 			//User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		}
 		
-		
+		//Se deja sin anotacion @Secured dado que esta permitido para todos los usuarios siempre y cuando esten atuenticados
 		@GetMapping(path = {"/contacts/pagina/{pagina}"}, produces = MediaType.APPLICATION_JSON_VALUE)
 		public ResponseEntity<?> showContactsPaginated(@PathVariable(name="pagina", required = true) int pagina) {		
 			
@@ -181,7 +176,7 @@ public class ContactController {
 					response = response.ok().headers(httpHeaders).body(paginados);	
 
 			}catch (Exception e) {
-				log.error("PROBLEMAS AL RECUPERAR LA LISTA DE CONTACTOS PGINADOS");	
+				log.error("PROBLEMAS AL RECUPERAR LA LISTA DE CONTACTOS PAGINADOS");	
 			}
 			
 			return response;
@@ -190,6 +185,8 @@ public class ContactController {
 	
 	
 	//Update de entidades Contacto en BD
+	////Recurso protegido por springSecurity mediante anotacion @Secured
+	//@Secured("ROLE_ADMIN")
 	@PutMapping(path = {"/contacts/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateContact(@PathVariable(name = "id", required = true) String id, @RequestBody ContactModel contactModelRequest, @Valid BindingResult result){
 		
@@ -216,6 +213,8 @@ public class ContactController {
 	
 	
 	//Delete de entidades Contacto en BD
+	////Recurso protegido por springSecurity mediante anotacion @Secured
+	//@Secured("ROLE_ADMIN")
 	@DeleteMapping(path = {"/contacts/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> deleteContact(@PathVariable(name = "id", required = true) String id){
 		
@@ -228,7 +227,8 @@ public class ContactController {
 			long itemsEliminados = contactService.deleteContact(id);
 			if(itemsEliminados > 0) {
 				log.info( itemsEliminados + "Contactos eliminados de manera correcta ");
-				log.info("Procedemos al borrado de su imagen de perfil. SE ELIMINÓ ? " + Files.deleteIfExists(Paths.get("fotos").resolve(_contacto.getFile()).toAbsolutePath()));
+				if(_contacto.getFile() != null)
+					log.info("Procedemos al borrado de su imagen de perfil. SE ELIMINÓ ? " + uploadImagenService.borrarImagen(_contacto.getFile()));
 				log.info("****************************************************************************************************");
 				return new ResponseEntity<Contact>(null, httpHeaders, HttpStatus.OK);
 				}
@@ -244,76 +244,7 @@ public class ContactController {
 		}
 
 	}
-	
-	@PostMapping(path = "/contacts/upload")
-	public ResponseEntity<?> upload(@RequestParam(name = "foto", required = true) MultipartFile file, @RequestParam String id){
-		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-		Map<String, Object> response = new HashMap<String, Object>();
-		
-		try {
-			
-			Contact _contact = contactService.getContactById(id);
-						
-			if(!file.isEmpty()) {
-				
-				String fotoVigente = _contact.getFile();
-				
-				if(fotoVigente != null)
-					log.info("SE ELIMINO IMAGEN ANTERIOR ?" + Files.deleteIfExists((Paths.get("fotos").resolve(_contact.getFile()).toAbsolutePath()))); ;
-				
-				String nombre_archivo = UUID.randomUUID()+file.getOriginalFilename();
-				Path ruta = Paths.get("fotos").resolve(nombre_archivo).toAbsolutePath();
-				Files.copy(file.getInputStream(), ruta);
-				//guardamos el nombre de la foto por ahora
-				_contact.setFile(nombre_archivo);
-				//actualizamos el contacto
-				contactService.updateContact(_contact);
-				response.put("contact", _contact);
-				response.put("mensaje", "Se ha subido foto"+ nombre_archivo +"correctamente");
-				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
-			}
-			
-			
-			
-		}catch(Exception e) {
-			log.error("Problemas al intentar subir archivo...");
-			response.put("Error al intentar subir archivo" , e.getCause().getMessage());
-		}
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-	
-	
-	
-	//				   /contact/file/{fileName:.+}   Expresion regular que indica que el parametro va a contener un punto y una extension		
-	@GetMapping(path = "/contacts/file/{fileName:.+}")
-	public ResponseEntity<?> getFile(@PathVariable(name = "fileName", required = true) String fileName){
-		//La respuesta de este servicio sera la imagen
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "image/png");
-		ResponseEntity<String> response = null;
-		Map<String, String> imagen = new HashMap<String, String>();
-		
-		try {
 
-			Path ruta = Paths.get("fotos").resolve(fileName).toAbsolutePath();
-			
-			String image = Base64.getEncoder().withoutPadding().encodeToString(Files.readAllBytes(ruta));
-			imagen.put("content", image);
-			headers.setContentLength(image.length());
-			headers.add("neri", "dummie");
-			
-			log.info("Respuesta imagen : ");
-			log.info(image.toString());
-			log.info("---------------------------------------------------------------------------------------");
-			response = ResponseEntity.status(HttpStatus.OK).headers(headers).body(image);
-			
-		}catch(Exception e){
-			log.error("Problemas al recuperar la imagen " + e.getCause().getMessage());
-		}
-		
-		return response;
-	}
 	
 
 }
