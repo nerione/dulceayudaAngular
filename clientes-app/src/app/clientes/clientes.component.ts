@@ -5,6 +5,8 @@ import {Router} from '@angular/router';
 import swal from 'sweetalert2';
 import {tap} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
+import {ModalService} from './detalle/modal.service';
+
 
 @Component({
   selector: 'app-clientes',
@@ -12,11 +14,13 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class ClientesComponent{
 
-  constructor(private clienteService : ClienteService,private router : Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private clienteService : ClienteService,private router : Router, private activatedRoute: ActivatedRoute,
+              private modalService : ModalService) { }
 
   cliente : Cliente;
   clientes : Cliente[];
   paginadorPadre: any;
+  clienteSeleccionado : Cliente;
 
   ngOnInit(){
     this.activatedRoute.paramMap.subscribe(params =>{
@@ -35,6 +39,15 @@ export class ClientesComponent{
         this.clientes = (response.content as Cliente[]);
         this.paginadorPadre = response;
       });
+    });
+
+    this.modalService.notificarUpload.subscribe(cliente => {
+      this.clientes = this.clientes.map( clienteOriginal => {
+        if(clienteOriginal.id === cliente.id){
+          clienteOriginal.file = cliente.file;
+        }
+        return clienteOriginal;
+      })
     });
   }
 
@@ -55,9 +68,14 @@ export class ClientesComponent{
         })
       }
     })
-
-
   }
 
+
+  //inyectamos un cliente al atributo de una clase hijo
+  abrirModal(cliente : Cliente){
+    console.log("ABRETE MIERAD")
+    this.clienteSeleccionado = cliente;
+    this.modalService.abrirModal();
+  }
 
 }

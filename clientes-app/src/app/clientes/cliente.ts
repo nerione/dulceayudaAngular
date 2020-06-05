@@ -5,4 +5,5 @@ export class Cliente {
   telephone : string;
   city : string;
   fechaRegistro: Date;
+  file : string;
 }
