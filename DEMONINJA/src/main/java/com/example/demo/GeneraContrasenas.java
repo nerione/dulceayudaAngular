@@ -10,7 +10,7 @@ public class GeneraContrasenas {
 		String pass = "anaone";
 		
 		BCryptPasswordEncoder encripta = new BCryptPasswordEncoder();
-		System.out.println(encripta.encode(pass));
+		//System.out.println(encripta.encode(pass));
 		
 	}
 

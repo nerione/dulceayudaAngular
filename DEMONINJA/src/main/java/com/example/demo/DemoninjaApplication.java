@@ -22,7 +22,7 @@ public class DemoninjaApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		
-		System.out.println("CONTRASEÑA : " + encripta.encode("nerione"));
+		//System.out.println("CONTRASEÑA : " + encripta.encode("nerione"));
 		
 		
 	}

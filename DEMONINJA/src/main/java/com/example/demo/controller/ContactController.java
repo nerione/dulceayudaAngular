@@ -34,8 +34,9 @@ import com.example.demo.model.ContactModel;
 import com.example.demo.repository.ContactRepository;
 import com.example.demo.service.UploadImagenService;
 
-
-@CrossOrigin(origins = {"http://localhost:4200"})
+//Para despliegues en ambientes productivos, es necesario agregar a la linea de abajo, el dominio, ruta o ip donde se encuentre desplegado el front. 
+//El * indica que acepte peticiones de donde sea. Por ahora esta bien pero no es recomendable
+@CrossOrigin(origins = {"http://localhost:4200", "*"})
 @RestController
 @RequestMapping(value = "/api")
 public class ContactController {
@@ -186,7 +187,7 @@ public class ContactController {
 	
 	//Update de entidades Contacto en BD
 	////Recurso protegido por springSecurity mediante anotacion @Secured
-	//@Secured("ROLE_ADMIN")
+	@Secured("ROLE_ADMIN")
 	@PutMapping(path = {"/contacts/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateContact(@PathVariable(name = "id", required = true) String id, @RequestBody ContactModel contactModelRequest, @Valid BindingResult result){
 		
@@ -215,7 +216,7 @@ public class ContactController {
 	//Delete de entidades Contacto en BD
 	////Recurso protegido por springSecurity mediante anotacion @Secured
 	//@Secured("ROLE_ADMIN")
-	@DeleteMapping(path = {"/contacts/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(path = {"/contacts/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> deleteContact(@PathVariable(name = "id", required = true) String id){
 		
 		HttpHeaders httpHeaders = new HttpHeaders();

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,9 @@ import com.example.demo.entity.Contact;
 import com.example.demo.repository.ContactRepository;
 import com.example.demo.service.UploadImagenService;
 
+//Para despliegues en ambientes productivos, es necesario agregar a la linea de abajo, el dominio, ruta o ip donde se encuentre desplegado el front. 
+//El * indica que acepte peticiones de donde sea. Por ahora esta bien pero no es recomendable
+@CrossOrigin(origins = {"http://localhost:4200", "*"})
 @RestController
 @RequestMapping(path = "/api")
 public class ImagenController {
@@ -55,7 +59,7 @@ public class ImagenController {
 	}
 	
 	//Recurso protegido por springSecurity mediante anotacion @Secured
-	//@Secured({"ROLE_USER","ROLE_ADMIN"})
+	@Secured({"ROLE_USER","ROLE_ADMIN"})
 	@PostMapping(path = "/contacts/upload")
 	public ResponseEntity<?> upload(@RequestParam(name = "archivo", required = true) MultipartFile archivo, @RequestParam String id){
 		HttpHeaders httpHeaders = new HttpHeaders();
