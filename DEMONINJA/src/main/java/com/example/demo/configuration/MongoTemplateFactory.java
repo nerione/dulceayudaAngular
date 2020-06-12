@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 //import org.springframework.security.config.core.GrantedAuthorityDefaults;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -26,7 +27,8 @@ public class MongoTemplateFactory {
 	}
 
 	private static MongoDbFactory getMongoDbFactory() {
-		MongoClient mClient = new MongoClient("localhost:27017");
+		//MongoClient mClient = new MongoClient("localhost:27017");
+		MongoClient mClient = new MongoClient(new MongoClientURI(uri));
 		SimpleMongoDbFactory s = new SimpleMongoDbFactory(mClient,"proyectoFinal");
 		
 		return s;
