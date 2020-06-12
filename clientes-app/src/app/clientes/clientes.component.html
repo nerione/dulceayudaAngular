@@ -7,7 +7,7 @@
     <h5 class="card-title">Lista de Contactos</h5>
 
     <div class="my-2 text-left">
-      <button type="button" class="btn btn-rounded btn-primary" [routerLink] = "['/clientes/form']">Crear contacto</button>
+      <button type="button" class="btn btn-rounded btn-primary" [routerLink] = "['/clientes/form']" *ngIf="authService.hasRole('ROLE_ADMIN')">Crear contacto</button>
     </div>
 
     <div *ngIf="clientes?.length <= 0" class="alert alert-info">
@@ -17,16 +17,16 @@
     <table class="table table-bordered table-striped" *ngIf="clientes?.length > 0">
       <thead>
         <tr>
-          <th>Id</th>
+          <th>#</th>
           <th>Nombre</th>
           <th>Apellido</th>
           <th>Telefono</th>
           <th>Ciudad</th>
           <th>Fecha</th>
-          <th>
+          <th *ngIf="authService.hasRole('ROLE_ADMIN')">
             Editar
           </th>
-          <th>
+          <th *ngIf="authService.hasRole('ROLE_ADMIN')">
             Eliminar
           </th>
         </tr>
@@ -45,11 +45,11 @@
           <td>{{cliente.telephone}}</td>
           <td>{{cliente.city}}</td>
           <td>{{cliente.fechaRegistro}}</td>
-          <td>
+          <td *ngIf="authService.hasRole('ROLE_ADMIN')">
             <button type="button" class ="btn btn-primary" [routerLink] = "['/clientes/form', cliente.id]">Editar</button>
           </td>
-          <td>
-            <button class="btn btn-danger btn-rounded" role="button" (click)='deleteContact(cliente)'>Borrar</button>
+          <td *ngIf="authService.hasRole('ROLE_ADMIN')">
+            <button class="btn btn-danger btn-rounded" role="button" (click)='deleteContact(cliente)' >Borrar</button>
           </td>
         </tr>
       </tbody>

@@ -4,6 +4,7 @@ import {ClienteService} from '../cliente.service';
 import swal from 'sweetalert2';
 import { HttpEventType } from '@angular/common/http';
 import {ModalService} from './modal.service';
+import { Oauth2Service } from 'src/app/usuarios/oauth2.service';
 
 
 @Component({
@@ -21,7 +22,9 @@ export class DetalleComponent implements OnInit {
   progreso : number = 0;
 
   constructor(private clienteService : ClienteService,
-    private modalService : ModalService) { }
+              //Para ambiente Productivo cambia el modificar de acceso a Public.
+              public modalService : ModalService,
+              public authService : Oauth2Service) { }
 
   ngOnInit(){}
 

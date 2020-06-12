@@ -11,11 +11,15 @@ import swal from 'sweetalert2';
 })
 export class FormComponent implements OnInit {
 
-cliente : Cliente = new Cliente()
+  //Para produccion, el modificador de acceso de cliente debe ser public
+
+public cliente : Cliente = new Cliente()
 titulo : string = "Crear nuevo contacto";
 errores : string[];
 
-  constructor(private clienteService : ClienteService, private router : Router,
+
+  constructor(private clienteService : ClienteService,
+              private router : Router,
               private activatedRoute : ActivatedRoute) { }
 
   ngOnInit(){
@@ -29,6 +33,7 @@ errores : string[];
       if(id){
         this.clienteService.getCliente(id).subscribe( (cliente) => this.cliente = cliente )
       }
+
     })
   }
 

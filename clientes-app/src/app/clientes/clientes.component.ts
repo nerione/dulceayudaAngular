@@ -6,6 +6,7 @@ import swal from 'sweetalert2';
 import {tap} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 import {ModalService} from './detalle/modal.service';
+import { Oauth2Service } from '../usuarios/oauth2.service';
 
 
 @Component({
@@ -14,8 +15,12 @@ import {ModalService} from './detalle/modal.service';
 })
 export class ClientesComponent{
 
-  constructor(private clienteService : ClienteService,private router : Router, private activatedRoute: ActivatedRoute,
-              private modalService : ModalService) { }
+  constructor(private clienteService : ClienteService,
+              private router : Router,
+              private activatedRoute: ActivatedRoute,
+              //PARA EL CASO DE ESTOS 2 ATRIBUTOS ABAJO, PARA AMBIENTES PRODUCTIVOS DEBEN SER PUBLIC DADO QUE SE ACCEDEN DESDE FUERA DE LA ESTA CLASE. Los demas quedan private porque son de esta clase.
+              public modalService : ModalService,
+              public authService : Oauth2Service) { }
 
   cliente : Cliente;
   clientes : Cliente[];
