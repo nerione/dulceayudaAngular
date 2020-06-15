@@ -6,13 +6,14 @@ import { HttpClient, HttpRequest, HttpEvent} from '@angular/common/http';
 import { map, catchError, tap } from 'rxjs/operators';
 //import swal from 'sweetalert2';
 import {Router} from '@angular/router'
+import { URL_BACKEND } from '../config/config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClienteService {
 
-  private urlEndPoint : string = "http://localhost:8080/api/contacts";
+  private urlEndPoint : string = URL_BACKEND+"/api/contacts";
   //Objeto HttpHeaders es inmutable, por lo que es necesario un metodo para agregar nuevos valores a los headers.
   //lO COMENTAMOS YA QUE LS HEADERS SON AGREGADOS AHORA POR EL TokenInterceptor
   //private httpHeaders = new HttpHeaders( {'Content-Type': 'application/json'} );

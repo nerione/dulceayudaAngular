@@ -7,6 +7,7 @@ import {tap} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 import {ModalService} from './detalle/modal.service';
 import { Oauth2Service } from '../usuarios/oauth2.service';
+import { URL_BACKEND } from '../config/config';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class ClientesComponent{
   clientes : Cliente[];
   paginadorPadre: any;
   clienteSeleccionado : Cliente;
+  urlBackend : string =URL_BACKEND;
 
   ngOnInit(){
     this.activatedRoute.paramMap.subscribe(params =>{

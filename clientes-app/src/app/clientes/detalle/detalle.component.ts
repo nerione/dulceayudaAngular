@@ -5,6 +5,7 @@ import swal from 'sweetalert2';
 import { HttpEventType } from '@angular/common/http';
 import {ModalService} from './modal.service';
 import { Oauth2Service } from 'src/app/usuarios/oauth2.service';
+import { URL_BACKEND } from 'src/app/config/config';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class DetalleComponent implements OnInit {
   file : File;
   fotoSeleccionada : File ;
   progreso : number = 0;
+  urlBackend : string = URL_BACKEND;
 
   constructor(private clienteService : ClienteService,
               //Para ambiente Productivo cambia el modificar de acceso a Public.

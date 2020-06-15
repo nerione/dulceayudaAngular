@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders , HttpRequest, HttpEvent} from '@angular/common
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import {Usuario} from './usuario';
+import { URL_BACKEND } from '../config/config';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class Oauth2Service {
 
   //Crendiales del front convertidas a B64
   private credenciales = btoa('angularApp'+':'+'123456789');
-  private urlEndPoint : string = "http://localhost:8080/oauth/token";
+  private urlEndPoint : string = URL_BACKEND+"/oauth/token";
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded',
                                           'Authorization' : 'Basic '+ this.credenciales });
 
