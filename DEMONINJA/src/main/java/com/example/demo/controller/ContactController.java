@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ import com.example.demo.entity.Contact;
 import com.example.demo.model.ContactModel;
 import com.example.demo.repository.ContactRepository;
 import com.example.demo.service.UploadImagenService;
+import com.example.demo.utils.Utilities;
 
 //Para despliegues en ambientes productivos, es necesario agregar a la linea de abajo, el dominio, ruta o ip donde se encuentre desplegado el front. 
 //El * indica que acepte peticiones de donde sea. Por ahora esta bien pero no es recomendable
@@ -53,6 +55,9 @@ public class ContactController {
 	private ContactConverter contactConverter;
 	
 	private static final Integer TAM_PAGINA = 3;
+	
+	@Value("${auth.token.uri}")
+	private String token;
 	
 	//API PARA OPERACIONES BASICAS SOBRE UN CONTACTO
 	
@@ -128,6 +133,12 @@ public class ContactController {
 		@GetMapping(path = {"/contacts/{id}", "/contacts"}, produces = MediaType.APPLICATION_JSON_VALUE)
 		public ResponseEntity<?> showContacts(@PathVariable(name = "id", required = false) String id) {
 			
+			
+			log.info("IMPRIMIENDO VALORES DEL PROPERTIES: " + token);
+			
+			Utilities utilities = new Utilities();
+			utilities.getToken();
+			log.info("...fin solicitud token ! ");
 			HttpHeaders httpHeaders = new HttpHeaders();
 			ResponseEntity<?> response = null;
 			Map<String, String> horror = new HashMap();
