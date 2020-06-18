@@ -59,16 +59,17 @@ public class Utilities {
 			HttpHeaders headers = new HttpHeaders();
 			String requestJson = "{\"apikey\":\"cd3592eee426ec9b97e58c24cba6a874878f1514.\"}";
 			
-			//Map<String, String> params = new HashMap();
+			Map<String, String> params = new HashMap();
 			
-			//params.put("apikey", "cd3592eee426ec9b97e58c24cba6a874878f1514");
-			headers.add("Content-Type", "application/x-www-form-urlencoded");
-			headers.add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-			
-			HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+			params.put("apikey", "cd3592eee426ec9b97e58c24cba6a874878f1514");
+			headers.add("Content-Type", "application/json");
+			//headers.add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+			//HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+			HttpEntity<Map> entity = new HttpEntity(params, headers);
 			
 			log.info("Request headers {} ",entity);
-			log.info("Inicia peticion para solicitar token..........................");
+			log.info("Inicia peticion para solicitar token. .... ....................");
+			//ResponseEntity<String> s = restTemplate.getForEntity("https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=439d4b804bc8187953eb36d2a8c26a02", String.class);
 			ResponseEntity<String> respuesta = restTemplate.postForEntity("https://api.smsmasivos.com.mx/auth", entity, String.class);
 			//ResponseEntity<AuthTokenResponse>  responseS = 
 			///log.info("Respuesta servicio token {}", responseS.toString());
