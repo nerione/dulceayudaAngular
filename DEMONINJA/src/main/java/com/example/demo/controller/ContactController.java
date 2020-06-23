@@ -25,14 +25,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.MediaType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import com.example.demo.converter.ContactConverter;
 import com.example.demo.entity.Contact;
+import com.example.demo.model.AuthTokenResponse;
 import com.example.demo.model.ContactModel;
+import com.example.demo.model.SMSResponse;
 import com.example.demo.repository.ContactRepository;
+import com.example.demo.service.SMS;
 import com.example.demo.service.UploadImagenService;
 import com.example.demo.utils.Utilities;
 
@@ -54,10 +58,14 @@ public class ContactController {
 	@Autowired
 	private ContactConverter contactConverter;
 	
+	@Autowired
+	private SMS smsService;
+	
+	@Autowired
+	private Utilities utils;
+	
 	private static final Integer TAM_PAGINA = 3;
 	
-	@Value("${auth.token.uri}")
-	private String token;
 	
 	//API PARA OPERACIONES BASICAS SOBRE UN CONTACTO
 	
@@ -126,6 +134,36 @@ public class ContactController {
 
 		}
 		
+		//Servicio para el envio de codigo verificador por sms al usuario registrado
+		@GetMapping(path="/sms", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+		public ResponseEntity<String> getToken(@RequestParam(name = "telefono") String telefono) {
+			
+			String response = null;
+			HttpHeaders httpHeaders = new HttpHeaders();
+			httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+			
+			try {
+				log.info("Iniciando peticion de envio de token via SMS");
+				//Recuperamos un token
+				ResponseEntity<AuthTokenResponse> tokenRequest = smsService.getToken();
+				if(tokenRequest.getBody() != null && tokenRequest.getBody().getCode().equalsIgnoreCase("auth_02")) {
+					//enviamo OTP
+					response = smsService.sendOTP(tokenRequest.getBody().getToken(), utils.generateOTP(),telefono);
+					
+				}else {
+					throw new Exception("No se pudo obtener un token para envio de otp");
+				}
+				
+				
+			}catch (Exception e) {
+				log.error("Error al intentar enviar codigo OTP al usuario " + e.getMessage());
+			}
+			
+			
+			return new ResponseEntity<String>(null, httpHeaders, HttpStatus.OK);		
+						
+		}
+		
 		
 		//R
 		//Recurso protegido por springSecurity mediante anotacion @Secured
@@ -133,12 +171,6 @@ public class ContactController {
 		@GetMapping(path = {"/contacts/{id}", "/contacts"}, produces = MediaType.APPLICATION_JSON_VALUE)
 		public ResponseEntity<?> showContacts(@PathVariable(name = "id", required = false) String id) {
 			
-			
-			log.info("IMPRIMIENDO VALORES DEL PROPERTIES: " + token);
-			
-			Utilities utilities = new Utilities();
-			utilities.getToken();
-			log.info("...fin solicitud token ! ");
 			HttpHeaders httpHeaders = new HttpHeaders();
 			ResponseEntity<?> response = null;
 			Map<String, String> horror = new HashMap();
