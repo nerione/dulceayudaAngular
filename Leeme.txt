@@ -1,5 +1,0 @@
-Bienvenido.
-
-Esta es la primera version del producto web para el seguimiento de control de citas en terapia psicologica.
-
-All Rights Are Reserved. 
