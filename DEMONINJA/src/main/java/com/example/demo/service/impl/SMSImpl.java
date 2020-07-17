@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import com.example.demo.model.AuthTokenResponse;
 import com.example.demo.model.SMSRequest;
 import com.example.demo.service.SMS;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class SMSImpl implements SMS{
@@ -51,7 +52,7 @@ public class SMSImpl implements SMS{
 		Map<String, String> params = new HashMap();
 		params.put("apikey", apikey);
 		headers.add("Content-Type", "application/json");
-		headers.add("User-Agent", "PostmanRuntime/7.26.1");
+		headers.add("User-Agent", "");
 		HttpEntity<Map> entity = new HttpEntity(params, headers);
 		
 		log.info("Inicia peticion para solicitar token .........................");
@@ -66,22 +67,25 @@ public class SMSImpl implements SMS{
 	}
 
 	@Override
-	public String sendOTP(String token, int otp, String smsNumber) {
+	public String sendOTP(String token, String otp, String smsNumber) {
 		
 		ResponseEntity<String> response = null;
 		try {
+			ObjectMapper mapper = new ObjectMapper();
 			restTemplate = new RestTemplate();
 			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.setContentType(MediaType.APPLICATION_JSON);
 			headers.add("token", token);
 			headers.add("User-Agent", "");
 			
 			SMSRequest sMSRequest = new SMSRequest();
 			sMSRequest.setCountry_code(codigoPais);
-			sMSRequest.setMessage("DULCEAYUDA. Este es tu codigo verificador : " + otp + " Ingresalo para continuar");
-			sMSRequest.setNumber(smsNumber);
-			
-			HttpEntity<SMSRequest> request = new HttpEntity<SMSRequest>(sMSRequest, headers);
+			sMSRequest.setMessage("Dulce Ayuda. Este es tu codigo verificador : " + otp + " Ingresalo para continuar");
+			sMSRequest.setNumbers(smsNumber);
+			//1 para modo de pruebas con hasta 1 mil pruebas por dia. 0 para modo produccion.
+			sMSRequest.setSandbox(0);
+			//mapper.writeValueAsString(sMSRequest);
+			HttpEntity<String> request = new HttpEntity<String>(mapper.writeValueAsString(sMSRequest), headers);
 			
 			response = restTemplate.postForEntity(urlSms, request, String.class);
 			
@@ -90,6 +94,7 @@ public class SMSImpl implements SMS{
 		}
 		
 		return response.getBody();
+		
 	}
 
 }

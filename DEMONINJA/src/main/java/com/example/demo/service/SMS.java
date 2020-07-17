@@ -8,6 +8,6 @@ public interface SMS {
 	
 	public abstract ResponseEntity<AuthTokenResponse> getToken();
 	
-	public abstract String sendOTP(String token, int otp, String numTel);
+	public abstract String sendOTP(String token, String otp, String numTel);
 
 }

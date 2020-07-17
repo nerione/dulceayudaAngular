@@ -29,12 +29,12 @@ public class MongoTemplateFactory {
 	private static MongoDbFactory getMongoDbFactory() {
 		//MongoClient mClient = new MongoClient("localhost:27017");
 		//Conexion mongo local
-		//MongoClient mClient = new MongoClient(new MongoClientURI("mongodb://ninjaneri:ninjaneri@localhost:27017/?authSource=admin"));
+		MongoClient mClient = new MongoClient(new MongoClientURI("mongodb://ninjaneri:ninjaneri@localhost:27017/?authSource=admin"));
 		//Conexion mongo remoto Heroku app
-		MongoClient mClient = new MongoClient(new MongoClientURI("mongodb://heroku_7hcwm1jc:a5heakp18eep58b27qoedp2isr@ds149353.mlab.com:49353/heroku_7hcwm1jc"));
+		//MongoClient mClient = new MongoClient(new MongoClientURI("mongodb://heroku_7hcwm1jc:a5heakp18eep58b27qoedp2isr@ds149353.mlab.com:49353/heroku_7hcwm1jc"));
 		//conexion mongo remoto mlab
-		SimpleMongoDbFactory s = new SimpleMongoDbFactory(mClient,"heroku_7hcwm1jc");
-		//SimpleMongoDbFactory s = new SimpleMongoDbFactory(mClient,"proyectoFinal");
+		//SimpleMongoDbFactory s = new SimpleMongoDbFactory(mClient,"heroku_7hcwm1jc");
+		SimpleMongoDbFactory s = new SimpleMongoDbFactory(mClient,"proyectoFinal");
 		
 		return s;
 	}

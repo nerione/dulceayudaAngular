@@ -30,7 +30,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 		
 		http.authorizeRequests()
 		//Cualquier petion a esta ruta no requiere autenticacion
-		.antMatchers(HttpMethod.GET, "/api/contacts", "/api/contacts/pagina/**", "/images/**", "/api/contacts/file/**", "/api/sms").permitAll() //permite mostrar todos los contactos y paginar y ver la foto
+		.antMatchers(HttpMethod.GET, "/api/contacts", "/api/contacts/pagina/**", "/images/**", "/api/contacts/file/**", "/api/sms", "/sat/declaracion").permitAll() //permite mostrar todos los contactos y paginar y ver la foto
 		.antMatchers(HttpMethod.GET, "/api/contacts/**").hasRole("ADMIN")//PARA PERMITIR LA CONSULTA DEL CONTACTO POR SU ID
 		.antMatchers(HttpMethod.DELETE, "/api/contacts/**").hasRole("ADMIN")
 		.antMatchers(HttpMethod.POST, "/api/contacts").hasRole("ADMIN")//permite persistir un nuevo contacto a la vez
