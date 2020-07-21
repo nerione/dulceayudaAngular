@@ -11,7 +11,6 @@ import javax.validation.Valid;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,6 @@ import com.example.demo.converter.ContactConverter;
 import com.example.demo.entity.Contact;
 import com.example.demo.model.AuthTokenResponse;
 import com.example.demo.model.ContactModel;
-import com.example.demo.model.SMSResponse;
 import com.example.demo.repository.ContactRepository;
 import com.example.demo.service.SMS;
 import com.example.demo.service.UploadImagenService;
@@ -60,9 +58,6 @@ public class ContactController {
 	
 	@Autowired
 	private SMS smsService;
-	
-	@Autowired
-	private Utilities utils;
 	
 	private static final Integer TAM_PAGINA = 3;
 	
@@ -148,7 +143,7 @@ public class ContactController {
 				ResponseEntity<AuthTokenResponse> tokenRequest = smsService.getToken();
 				if(tokenRequest.getBody() != null && tokenRequest.getBody().getCode().equalsIgnoreCase("auth_02")) {
 					//enviamo OTP
-					response = smsService.sendOTP(tokenRequest.getBody().getToken(), utils.generateOTP(),telefono);
+					response = smsService.sendOTP(tokenRequest.getBody().getToken(), Utilities.generateOTP(),telefono);
 					
 				}else {
 					throw new Exception("No se pudo obtener un token para envio de otp");

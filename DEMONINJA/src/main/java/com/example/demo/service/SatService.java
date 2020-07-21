@@ -8,6 +8,6 @@ import com.example.demo.model.SatDeclaraResponse;
 
 public interface SatService {
 	
-	public abstract SatDeclaraResponse getResumeFacturas(ArrayList<File> fileListEmitidas, ArrayList<File> fileListRecibidas);
+	public abstract SatDeclaraResponse getResumeFacturas();
 
 }
