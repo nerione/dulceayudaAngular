@@ -2,6 +2,7 @@ package mx.com.dulceayuda.repository;
 
 import mx.com.dulceayuda.entity.UsuarioEntity;
 import mx.com.dulceayuda.exceptions.AltaUsuarioException;
+import mx.com.dulceayuda.model.Usuario;
 
 
 public interface UserRepository{
@@ -10,6 +11,6 @@ public interface UserRepository{
 	
 	public abstract UsuarioEntity getUsuarioByName(String userName);
 	
-	public abstract UsuarioEntity altaUsuairo(UsuarioEntity usuario) throws AltaUsuarioException;
+	public abstract UsuarioEntity altaUsuairo(Usuario usuario);
 
 }

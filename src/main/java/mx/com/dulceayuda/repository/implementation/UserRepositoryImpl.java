@@ -7,8 +7,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
+import mx.com.dulceayuda.converter.Converter;
 import mx.com.dulceayuda.entity.UsuarioEntity;
 import mx.com.dulceayuda.exceptions.AltaUsuarioException;
+import mx.com.dulceayuda.model.Usuario;
 import mx.com.dulceayuda.repository.UserRepository;
 
 
@@ -29,15 +31,11 @@ public class UserRepositoryImpl implements UserRepository{
 
 
 	@Override
-	public UsuarioEntity altaUsuairo(UsuarioEntity usuario)throws AltaUsuarioException{
+	public UsuarioEntity altaUsuairo(Usuario usuario){
 		
-		log.info("iniciando alta de nuevo usuario....... {} " , usuario.toString() );
-		//si el usuario no pudo ser registrado 
-		if(true) {
-			throw new AltaUsuarioException("El usuario no puedo ser creado", 200);
-		}
-		
-		return mongoTemplate.save(usuario);
+		log.info("iniciando alta de nuevo usuario....... {} " , usuario.toString());
+		//si el usuario no pudo ser registrado
+		return mongoTemplate.save(Converter.userModelToEntity(usuario));
 		
 	}
 

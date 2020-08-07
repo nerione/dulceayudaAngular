@@ -20,8 +20,9 @@ public class Usuario {
 	private int edad;
 	private String email;
 	private String telefono;
-	private String uname;
-	private String upass;
+	private String userName;
+	private String userPass;
+	private boolean enabled;
 	private Set<UserRole> userRole = new HashSet<>();
 	private String especialidad;
 	private String codigoReferido;

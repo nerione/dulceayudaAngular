@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 import mx.com.dulceayuda.entity.UsuarioEntity;
 import mx.com.dulceayuda.exceptions.AltaUsuarioException;
+import mx.com.dulceayuda.model.Usuario;
 import mx.com.dulceayuda.repository.UserRepository;
 import mx.com.dulceayuda.response.Response;
 
@@ -33,7 +34,7 @@ public class UsuarioController {
 	
 	//Controlador para el registro de usuario nuevos a la plataforma
 	@PostMapping(path = "/usuario", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response> registro(@Valid @RequestBody UsuarioEntity usuario, BindingResult result){
+	public ResponseEntity<Response> registro(@Valid @RequestBody Usuario usuario, BindingResult result){
 		
 		log.info("Iniciando registro de nuevo usuario");
 		Response response = new Response();
@@ -49,8 +50,6 @@ public class UsuarioController {
 		//Alta de un nuevo usuario
 		try {
 			userRepository.altaUsuairo(usuario);
-		}catch(AltaUsuarioException e) {
-			//log.error(e.getMessage());
 		}catch(Exception e) {
 			//log.error(e.getMessage());
 		}
