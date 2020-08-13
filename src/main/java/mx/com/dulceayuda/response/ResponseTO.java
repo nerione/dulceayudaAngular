@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class Response {
+public class ResponseTO {
 	
 	@JsonIgnoreProperties({"codigoRespuesta"})
 	private String codigoRespuesta;

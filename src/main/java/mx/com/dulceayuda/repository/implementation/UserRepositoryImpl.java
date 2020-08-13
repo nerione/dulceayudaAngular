@@ -16,9 +16,9 @@ import mx.com.dulceayuda.repository.UserRepository;
 
 @Slf4j
 @Repository
-public class UserRepositoryImpl implements UserRepository{
+public class UserRepositoryImpl /*implements UserRepository*/{
 	
-	@Autowired
+	/*@Autowired
 	private MongoTemplate mongoTemplate;
 	
 	@Override
@@ -45,7 +45,7 @@ public class UserRepositoryImpl implements UserRepository{
 		Query query = new Query();
 		query.addCriteria(Criteria.where("userName").is(userName));
 		return mongoTemplate.findOne(query, UsuarioEntity.class);
-	}
+	}*/
 	
 
 }

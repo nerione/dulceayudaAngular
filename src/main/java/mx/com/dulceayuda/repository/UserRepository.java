@@ -1,16 +1,21 @@
 package mx.com.dulceayuda.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
 import mx.com.dulceayuda.entity.UsuarioEntity;
-import mx.com.dulceayuda.exceptions.AltaUsuarioException;
-import mx.com.dulceayuda.model.Usuario;
 
 
-public interface UserRepository{
+@Repository
+public interface UserRepository extends MongoRepository<UsuarioEntity, String>{
 	
-	public abstract UsuarioEntity getUsuarioById(String id);
+	public abstract UsuarioEntity findByNombre(String nombre);
 	
-	public abstract UsuarioEntity getUsuarioByName(String userName);
+	//public abstract UsuarioEntity getUsuarioEntityByName(String userName);
 	
-	public abstract UsuarioEntity altaUsuairo(Usuario usuario);
+	//public abstract UsuarioEntity altaUsuairo(Usuario usuario);
 
 }

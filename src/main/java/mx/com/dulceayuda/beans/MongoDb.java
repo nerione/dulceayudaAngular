@@ -15,7 +15,7 @@ import com.mongodb.MongoClientURI;
 @Configuration
 public class MongoDb {
 	
-	@Bean
+	@Bean(name="mongoTemplate")
 	public MongoTemplate getMongoTemplate() {
 		
 		//MappingMongoConverter converter = new MappingMongoConverter(getMongoDbFactory(), new MongoMappingContext());

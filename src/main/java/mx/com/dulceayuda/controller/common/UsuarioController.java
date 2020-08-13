@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
+import mx.com.dulceayuda.converter.Converter;
 import mx.com.dulceayuda.entity.UsuarioEntity;
-import mx.com.dulceayuda.exceptions.AltaUsuarioException;
 import mx.com.dulceayuda.model.Usuario;
 import mx.com.dulceayuda.repository.UserRepository;
-import mx.com.dulceayuda.response.Response;
+import mx.com.dulceayuda.response.ResponseTO;
 
 @Slf4j
 @RestController
@@ -32,12 +32,12 @@ public class UsuarioController {
 	private UserRepository userRepository;
 	
 	
-	//Controlador para el registro de usuario nuevos a la plataforma
+	//REGISTRO DE USUARIOS
 	@PostMapping(path = "/usuario", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response> registro(@Valid @RequestBody Usuario usuario, BindingResult result){
+	public ResponseEntity<ResponseTO> registro(@Valid @RequestBody Usuario usuario, BindingResult result){
 		
 		log.info("Iniciando registro de nuevo usuario");
-		Response response = new Response();
+		ResponseTO response = new ResponseTO();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		List<String> errores = result.getFieldErrors().parallelStream().map(error -> "Campo " + error.getField().toUpperCase() + error.getDefaultMessage()).collect(Collectors.toList());
@@ -47,27 +47,21 @@ public class UsuarioController {
 			response.setErrores(errores);
 			response.setMensaje("Verifique que los campos obligatorios existan");
 		}
+		
 		//Alta de un nuevo usuario
 		try {
-			userRepository.altaUsuairo(usuario);
+			
+			UsuarioEntity nuevoUsuario = Converter.userModelToEntity(usuario);			
+			userRepository.save(nuevoUsuario);
+			
 		}catch(Exception e) {
-			//log.error(e.getMessage());
+			
+			log.error(e.getMessage());
 		}
 		
-		return new ResponseEntity<Response>(response, headers, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<ResponseTO>(response, headers, HttpStatus.OK);
 		
 	}
-	
-	
-	//Controlador para inicio de sesion en plataforma
-	@GetMapping(path = "/usuario", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Response> inciarSesion(){
-		
-		//userRepository
-		
-		return null;
-	}
-	
 	
 	
 }
