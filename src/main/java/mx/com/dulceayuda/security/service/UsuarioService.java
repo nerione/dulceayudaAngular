@@ -23,7 +23,8 @@ public class UsuarioService implements UserDetailsService{
 	
 	@Autowired
 	private UserRepository userRepository;
-
+	
+	
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		
@@ -37,11 +38,13 @@ public class UsuarioService implements UserDetailsService{
 		return buildUser(usuario, authorities);
 	}
 
+	//Se contruye un usuario de Spring Security
 	private org.springframework.security.core.userdetails.User buildUser(UsuarioEntity usuario, List<GrantedAuthority> authorities) {
 		return new User(usuario.getUserName(), usuario.getUserPass(), usuario.isEnabled(), 
 						true, true, true, authorities);
 	}
-
+	
+	//Se contruye la lista de GrantedAuthorities a partir de los roles del usuario.
 	private List<GrantedAuthority> buildAuthorities(Set<UserRole> userRoles) {
 		
 		Set<GrantedAuthority> auths = new HashSet<GrantedAuthority>();

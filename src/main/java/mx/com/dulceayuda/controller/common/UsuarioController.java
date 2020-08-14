@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +45,7 @@ public class UsuarioController {
 			response.setCodigoRespuesta(HttpStatus.BAD_REQUEST.toString());
 			response.setErrores(errores);
 			response.setMensaje("Verifique que los campos obligatorios existan");
+			return new ResponseEntity<ResponseTO>(response, headers, HttpStatus.BAD_REQUEST);
 		}
 		
 		//Alta de un nuevo usuario
