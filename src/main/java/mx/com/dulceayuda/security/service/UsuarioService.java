@@ -28,7 +28,7 @@ public class UsuarioService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		
-		UsuarioEntity usuario = userRepository.findByNombre(userName);// getUsuarioByName(userName);
+		UsuarioEntity usuario = userRepository.findByUserName(userName);// getUsuarioByName(userName);
 		
 		if(usuario == null)
 			throw new UsernameNotFoundException("El usuario "+userName+" no fue encontrado");
@@ -44,9 +44,9 @@ public class UsuarioService implements UserDetailsService{
 						true, true, true, authorities);
 	}
 	
+	
 	//Se contruye la lista de GrantedAuthorities a partir de los roles del usuario.
 	private List<GrantedAuthority> buildAuthorities(Set<UserRole> userRoles) {
-		
 		Set<GrantedAuthority> auths = new HashSet<GrantedAuthority>();
 		userRoles.forEach(rol -> auths.add(new SimpleGrantedAuthority(rol.getRole())));
 		return new ArrayList<GrantedAuthority>(auths);

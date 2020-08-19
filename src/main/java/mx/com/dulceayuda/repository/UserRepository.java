@@ -9,6 +9,6 @@ import mx.com.dulceayuda.entity.UsuarioEntity;
 @Repository
 public interface UserRepository extends MongoRepository<UsuarioEntity, String>{
 	
-	public abstract UsuarioEntity findByNombre(String nombre);
+	public abstract UsuarioEntity findByUserName(String nombre);
 
 }
