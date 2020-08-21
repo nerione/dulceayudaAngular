@@ -1,8 +1,11 @@
 package mx.com.dulceayuda.converter;
 
+import lombok.extern.slf4j.Slf4j;
 import mx.com.dulceayuda.entity.UsuarioEntity;
 import mx.com.dulceayuda.model.Usuario;
+import mx.com.dulceayuda.utilities.Utilerias;
 
+@Slf4j
 public class Converter {
 	
 	
@@ -32,6 +35,8 @@ public class Converter {
 	//Convertir Model a Entidad 
 	public static UsuarioEntity userModelToEntity(Usuario usuario) {
 		
+		String _codigoReferido = usuario.getNombre().concat(Utilerias.generateOTP());
+		
 		return new UsuarioEntity(usuario.getId(), 
 				usuario.getNombre(), 
 				usuario.getApellidoPaterno(), 
@@ -44,7 +49,7 @@ public class Converter {
 				usuario.getUserPass(), 
 				usuario.getUserRole(), 
 				usuario.getEspecialidad(), 
-				usuario.getCodigoReferido(), 
+				_codigoReferido.replace(" ", ""),
 				usuario.isPrimeraCitaGratis(), 
 				usuario.getMunicipio(), 
 				usuario.getEstado(), 

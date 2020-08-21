@@ -18,8 +18,8 @@ public class DulceAyudaAppApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		//encripta = new BCryptPasswordEncoder();
-		//System.out.println("Password encoded : " + encripta.encode("nerione"));		
+		encripta = new BCryptPasswordEncoder();
+		System.out.println("Password encoded : " + encripta.encode("dulcenely"));		
 	}
 	
 	

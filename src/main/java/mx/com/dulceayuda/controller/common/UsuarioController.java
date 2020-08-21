@@ -31,7 +31,7 @@ public class UsuarioController {
 	private UserRepository userRepository;
 	
 	
-	//REGISTRO DE USUARIOS
+	//REGISTRO DE USUARIOS. ACCESIBLE PARA TODOS SIN AUTENTICACION
 	@PostMapping(path = "/usuario", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ResponseTO> registro(@Valid @RequestBody Usuario usuario, BindingResult result){
 		
