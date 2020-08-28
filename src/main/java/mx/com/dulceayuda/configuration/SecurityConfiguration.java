@@ -29,7 +29,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 		.antMatchers(HttpMethod.POST, "/api/v1/usuario").permitAll()//ruta para registrar a un nuevo usuario
-		.antMatchers(HttpMethod.POST, "/api/v1/paciente/**").hasRole("USER")
+		.antMatchers(HttpMethod.POST, "/api/v1/paciente/**").permitAll()//hasRole("USER")
+		.antMatchers(HttpMethod.GET, "/api/vi/paciente/**").permitAll()
 		.and()
 		.csrf().disable()
 		.httpBasic()

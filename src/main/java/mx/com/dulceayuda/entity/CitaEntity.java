@@ -1,16 +1,18 @@
 package mx.com.dulceayuda.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "citas")
 public class CitaEntity implements Serializable {
 
@@ -20,7 +22,8 @@ public class CitaEntity implements Serializable {
 	private String id;
 	
 	private String idPaciente;
-	private LocalDate fecha;
+	private Date fecha;
+	private int hora;
 	private String estatus;
 
 }
