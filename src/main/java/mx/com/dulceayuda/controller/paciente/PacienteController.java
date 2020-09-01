@@ -70,7 +70,6 @@ public class PacienteController {
 			log.info("idUser : {} ", cita.toString());
 			CitaEntity citaEntity = CitaConverter.citaModelToEntity(cita);
 			citaRepository.save(citaEntity);
-			
 			log.info("Consulta de cita para usuario 1 {} ", citaRepository.findById("1"));
 			
 			response = ResponseEntity.ok().body(new ResponseTO("EXITO", null, "La cita fue agendada exitosamente."));

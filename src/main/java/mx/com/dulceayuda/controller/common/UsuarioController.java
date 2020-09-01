@@ -1,6 +1,7 @@
 package mx.com.dulceayuda.controller.common;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 import mx.com.dulceayuda.converter.Converter;
 import mx.com.dulceayuda.entity.UsuarioEntity;
+import mx.com.dulceayuda.entity.UsuarioSequenceEntity;
 import mx.com.dulceayuda.model.Usuario;
 import mx.com.dulceayuda.repository.UserRepository;
+import mx.com.dulceayuda.repository.UsuarioCounter;
 import mx.com.dulceayuda.response.ResponseTO;
 
 @Slf4j
@@ -29,6 +33,12 @@ public class UsuarioController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UsuarioCounter usuarioCounter;
+	
+	@Autowired
+	private BCryptPasswordEncoder encript;
 	
 	
 	//REGISTRO DE USUARIOS. ACCESIBLE PARA TODOS SIN AUTENTICACION
@@ -50,13 +60,15 @@ public class UsuarioController {
 		
 		//Alta de un nuevo usuario
 		try {
-			
-			UsuarioEntity nuevoUsuario = Converter.userModelToEntity(usuario);			
+			UsuarioEntity nuevoUsuario = Converter.userModelToEntity(usuario);
+			nuevoUsuario.setUserPass(encript.encode(usuario.getUserPass()));
+			nuevoUsuario.setId(Integer.toString(usuarioCounter.findById("usuariosId").get().getValor()));
+			//nuevoUsuario.setId(usuarioCounter.findById("usuariosId").get().getValor() + 1);
 			userRepository.save(nuevoUsuario);
 			
 		}catch(Exception e) {
 			
-			log.error(e.getMessage());
+			log.error(e.toString());
 		}
 		
 		return new ResponseEntity<ResponseTO>(response, headers, HttpStatus.OK);
