@@ -1,4 +1,4 @@
-package mx.com.dulceayuda.controller.paciente;
+package mx.com.dulceayuda.controller;
 
 import java.util.List;
 
@@ -23,14 +23,14 @@ import mx.com.dulceayuda.response.ResponseTO;
 
 @Slf4j
 @RestController
-@RequestMapping(path = "/api/v1/paciente")
-public class PacienteController {
+@RequestMapping(path = "/api/v1")
+public class CitasController {
 	
 	@Autowired
 	private CitaRepository citaRepository;
 	
 	
-	@GetMapping(path = {"/citas/{id}","/citas"}, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = {"/cita/{id}","/citas"}, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ResponseCitasTO> getGenerales(@PathVariable(required = false, name = "id") String id){
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -58,7 +58,7 @@ public class PacienteController {
 	}
 	
 	
-	@PostMapping(path = "/citas", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path = "/cita", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> citas(@RequestBody Cita cita){
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -72,7 +72,7 @@ public class PacienteController {
 			citaRepository.save(citaEntity);
 			log.info("Consulta de cita para usuario 1 {} ", citaRepository.findById("1"));
 			
-			response = ResponseEntity.ok().body(new ResponseTO("EXITO", null, "La cita fue agendada exitosamente."));
+			response = ResponseEntity.ok().body(new ResponseTO("EXITO", null, "La cita fue agendada correctamente."));
 			
 		}catch (Exception e) {
 			log.error("Ocurrio un problema al intentar generar una cita para el usuario {} {}" , cita.getIdPaciente(), e.getMessage());

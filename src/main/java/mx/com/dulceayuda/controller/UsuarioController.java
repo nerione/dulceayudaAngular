@@ -1,4 +1,4 @@
-package mx.com.dulceayuda.controller.common;
+package mx.com.dulceayuda.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
-import mx.com.dulceayuda.converter.Converter;
+import mx.com.dulceayuda.converter.UsuarioConverter;
 import mx.com.dulceayuda.entity.UsuarioEntity;
 import mx.com.dulceayuda.entity.UsuarioSequenceEntity;
 import mx.com.dulceayuda.model.Usuario;
@@ -40,6 +40,8 @@ public class UsuarioController {
 	@Autowired
 	private BCryptPasswordEncoder encript;
 	
+	private Optional <UsuarioSequenceEntity> secuenciaUsuario;
+	
 	
 	//REGISTRO DE USUARIOS. ACCESIBLE PARA TODOS SIN AUTENTICACION
 	@PostMapping(path = "/usuario", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,15 +62,17 @@ public class UsuarioController {
 		
 		//Alta de un nuevo usuario
 		try {
-			UsuarioEntity nuevoUsuario = Converter.userModelToEntity(usuario);
+			UsuarioEntity nuevoUsuario = UsuarioConverter.userModelToEntity(usuario);
 			nuevoUsuario.setUserPass(encript.encode(usuario.getUserPass()));
-			nuevoUsuario.setId(Integer.toString(usuarioCounter.findById("usuariosId").get().getValor()));
-			//nuevoUsuario.setId(usuarioCounter.findById("usuariosId").get().getValor() + 1);
+			secuenciaUsuario = usuarioCounter.findById("usuariosId");
+			nuevoUsuario.setId(Integer.toString(secuenciaUsuario.get().getValor()));
 			userRepository.save(nuevoUsuario);
+			secuenciaUsuario.get().setValor(secuenciaUsuario.get().getValor()+1);
+			usuarioCounter.save(secuenciaUsuario.get());
 			
 		}catch(Exception e) {
-			
 			log.error(e.toString());
+			return new ResponseEntity<ResponseTO>(response, headers, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		return new ResponseEntity<ResponseTO>(response, headers, HttpStatus.OK);

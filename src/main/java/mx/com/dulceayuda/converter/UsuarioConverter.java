@@ -6,7 +6,7 @@ import mx.com.dulceayuda.model.Usuario;
 import mx.com.dulceayuda.utilities.Utilerias;
 
 @Slf4j
-public class Converter {
+public class UsuarioConverter {
 	
 	
 	//Convertir Entidad a Model

@@ -10,5 +10,6 @@ public class Nota {
 	private String id;
 	private String idTipoNota;
 	private String descripcion;
+	private String estatus;
 
 }
