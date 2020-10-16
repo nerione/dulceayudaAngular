@@ -1,5 +1,6 @@
 package mx.com.dulceayuda.controller;
 
+import java.net.InetAddress;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -62,6 +63,9 @@ public class UsuarioController {
 		
 		//Alta de un nuevo usuario
 		try {
+			
+			log.info("IP cliente:{} ", InetAddress.getLocalHost().getHostAddress());
+			
 			UsuarioEntity nuevoUsuario = UsuarioConverter.userModelToEntity(usuario);
 			nuevoUsuario.setUserPass(encript.encode(usuario.getUserPass()));
 			secuenciaUsuario = usuarioCounter.findById("usuariosId");
