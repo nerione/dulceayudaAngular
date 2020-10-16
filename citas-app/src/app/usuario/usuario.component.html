@@ -1,0 +1,19 @@
+
+<div class="card border-primary mb-3" style="max-width: 18rem;">
+  <div class="card-header">Dashboard inicial</div>
+  <div class="card-body text-primary">
+    <h5 class="card-title">Citas disponibles</h5>
+      <table *ngFor="let usuario of usuarios">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of usuarios">
+            <td>{{u.nombre}}</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</div>
