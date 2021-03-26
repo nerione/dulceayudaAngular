@@ -1,0 +1,50 @@
+GIT TUTORIAL
+git init - inicializa repositorio local
+git status - revisa si existen cambios en la version local
+git commit -m "Mensaje enviado al ´repo remoto"
+git diff - muestra diferencias entre el directorio de trabajoy la ultima version commiteada.  
+git diff <fileName> - muestra las diferencias entre el archivo local y la ultima version en el repo remoto.
+git diff --staged - compara las diferencias entre los archivos en staging area y el repo remoto.
+git mv - mueve un archivo a una localizacion diferente de la original y a la vez actualiza su ubicacion en el staging area
+git rm - elimina un archivo del directorio y a su vez actualiza el staging area
+
+git log - permite ver la historia del repo y sus logs del commit
+git log --pretty=format:"%h %an %ar - %s"  - permite ver la historia del repo y sus logs del commit pero en una linea (mas bonito)
+git log --oneline - ver la traza de comits linea a linea
+
+git show - para ver los combios echos en los commits
+
+git remote add origin /s/remote-project/1 - agrega un nuevo repositorio y lo nombra como origin
+git clone - de la misma manera que remote, agrega un repo remoto y lo nombra en automatico como origin.
+
+git pull - para sincronizar los cambios del repo remoto con tu repo local. AUNADO A ESTO, ESTA INSTRUCCION ES LA COMBINACION DE 2 COMANDOS DIFERENTES: git fetch y git merge.
+	git fetch - permite revisar los cambios sin afectar tu rama actual
+	git merge - hacer merge entre la rama oculta fetch y la rama local. 
+	
+git checkout remotes/origin/master - se cambia de rama a la rama oculta para revisar los cambios antes de hacer merge con la rama local
+
+git branch -r - permite ver toda la lista de ramas remotas
+git branch -a - permite ver las ramas remotas ocultas. Aqui es donde el git fetch deja los cambios para no afettar tu rama local
+
+git push origin master - comando que envia cambios al repo remoto, 2 parametros: nombre del repo remoto y nombre de la rama. Por default, 
+
+git log --grep="#1234" - busca en el historial de commits en los mensajes la cadena "#1234"
+git checkout - sin parametros remplaza todo en tu directorio local a la ultima version commiteada a exception de los modificados en tu local. 
+git checkout . - reemplaza todos los archivos en tu directorio local por la ultima version commiteada. Incluso tus cambios en los archivo de tu repo local. !!!!
+
+git reset - Regresa los cambios en el staging area al directorio de trabajo.
+
+git checkout --our
+git checkout --theirs staging.txt
+
+archivo .gitignore contiene las extensiones de los archivos que seran ignorados al subir archivos.
+
+git push --set-upstream origin Web-Front    Comando que crea un branch en el repositorio remoto con el nombre de un branch nuevo local, para subir los cambios.
+
+
+git branch -D branch_name --* ELIMINA UNA RAMA DEL REPO LOCAL
+$ git push origin --delete branch_name  ----* ELIMINA UNA RAMA DEL REPO REMOTO
+$ git log origin/Web-Back-Dap..HEAD      -----> comando para ver los commits en local que aun no son pusheados al repo remoto
+
+
+
