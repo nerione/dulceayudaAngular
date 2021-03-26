@@ -1,0 +1,17 @@
+.rotate .fab.fa-whatsapp:hover {
+  font-size:6em;
+  transition: .1s ease-out;
+    color: #4FCE5D;
+}
+.fa-facebook:hover{
+  color: #4267B2;
+}
+.fa-facebook-messenger:hover{
+  color: #4267B2;
+}
+.fa-youtube:hover{
+  color: #c4302b;
+}
+.fa-whatsapp:hover{
+  color: #4AC959;
+}

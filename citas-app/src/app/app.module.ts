@@ -6,6 +6,8 @@ import {HeaderComponent} from './header/header.component';
 import {FooterComponent} from './footer/footer.component';
 import { DirectivaComponent } from './directiva/directiva.component';
 import { UsuarioComponent } from './usuario/usuario.component';
+import { RegistroComponent } from './registro/registro.component';
+import { FunnelComponent } from './funnel/funnel.component';
 
 @NgModule({
   declarations: [
@@ -13,7 +15,9 @@ import { UsuarioComponent } from './usuario/usuario.component';
     HeaderComponent,
     FooterComponent,
     DirectivaComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    RegistroComponent,
+    FunnelComponent
   ],
   imports: [
     BrowserModule
